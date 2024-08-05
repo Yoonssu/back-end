@@ -42,20 +42,11 @@ public class MyPageService {
     }
 
     public List<PetDTO> getPetInfo(String userId) {
-        Optional<Pet> petOptional = petRepository.findById(Long.valueOf(userId));
-        if (petOptional.isPresent()) {
-            Pet pet = petOptional.get();
-            return Collections.singletonList(mapToPetDTO(pet));
-        } else {
-            throw new PetNotFoundException(ErrorCode.USER_NOT_FOUND);
+        List<Pet> pets = petRepository.findByUserId(userId);
+        if (pets.isEmpty()) {
+            throw new PetNotFoundException(ErrorCode.PET_NOT_FOUND);
         }
-    }
-
-    public void updateNickname(String userId, String newNickname) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
-
-        user.setNickname(newNickname);
-        userRepository.save(user);
+        return pets.stream().map(this::mapToPetDTO).collect(Collectors.toList());
     }
 
     private PetDTO mapToPetDTO(Pet pet) {
@@ -66,8 +57,18 @@ public class MyPageService {
                 .neuter(pet.getNeuter())
                 .image(pet.getImage())
                 .age(pet.getAge())
+                .feature(pet.getFeature())
                 .build();
     }
+
+    public void updateNickname(String userId, String newNickname) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        user.setNickname(newNickname);
+        userRepository.save(user);
+    }
+
+
 
     // 사용자 ID를 기반으로 해당 사용자가 작성한 입양 후기 목록을 DTO로 변환하여 반환하는 메서드
     public List<AdoptReviewDTO> getAdoptReviewsByUserId(String userId) {
