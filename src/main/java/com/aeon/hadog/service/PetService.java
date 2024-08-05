@@ -31,6 +31,7 @@ public class PetService {
                 .neuter(petDTO.getNeuter())
                 .image(petDTO.getImage())
                 .age(petDTO.getAge())
+                .feature(petDTO.getFeature())
                 .user(userRepository.findById(userId).get())
                 .build();
 
@@ -52,6 +53,7 @@ public class PetService {
             pet.setNeuter(petDTO.getNeuter());
             pet.setImage(petDTO.getImage());
             pet.setAge(petDTO.getAge());
+            pet.setFeature(petDTO.getFeature());
 
             petRepository.save(pet);
 
@@ -75,6 +77,7 @@ public class PetService {
                     .neuter(pet.getNeuter())
                     .image(pet.getImage())
                     .age(pet.getAge())
+                    .feature(pet.getFeature())
                     .build();
 
             return petDTO;

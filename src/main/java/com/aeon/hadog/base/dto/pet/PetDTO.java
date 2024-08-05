@@ -19,5 +19,6 @@ public class PetDTO {
     private Boolean neuter;
     private String image;
     private Integer age;
+    private String feature;
 
 }

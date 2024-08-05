@@ -38,4 +38,7 @@ public class Pet {
 
     @Column
     private Integer age;
+
+    @Column
+    private String feature;
 }
