@@ -20,10 +20,10 @@ public class User {
     @Column(nullable=false)
     private String name;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private String id;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private String password;
 
     @Column(nullable=false)
@@ -31,4 +31,9 @@ public class User {
 
     @Column(nullable=false)
     private String email;
+
+    public User update(String name){
+        this.name = name;
+        return this;
+    }
 }

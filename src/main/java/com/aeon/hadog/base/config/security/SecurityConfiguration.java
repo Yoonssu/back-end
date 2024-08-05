@@ -15,6 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+//    public SecurityConfiguration(CustomOAuth2UserService customOAuth2UserService){
+//        this.customOAuth2UserService = customOAuth2UserService;
+//    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -28,6 +34,10 @@ public class SecurityConfiguration {
             );
         httpSecurity
             .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+                .oauth2Login(oauth2Login ->
+                        oauth2Login.userInfoEndpoint(userInfoEndpointConfig ->
+                                userInfoEndpointConfig.userService(customOAuth2UserService)));
 
         return httpSecurity.build();
     }
