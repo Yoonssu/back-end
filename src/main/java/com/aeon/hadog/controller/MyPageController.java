@@ -1,5 +1,6 @@
 package com.aeon.hadog.controller;
 
+import com.aeon.hadog.base.dto.emotionTrack.EmotionTrackDTO;
 import com.aeon.hadog.base.dto.mypage.MyPageDTO;
 import com.aeon.hadog.base.dto.adoptPost.AdoptPostDTO;
 import com.aeon.hadog.base.dto.adopt_review.AdoptReviewDTO;
@@ -74,7 +75,26 @@ public class MyPageController {
         }
     }
 
+    // 사용자의 감정 추적 목록을 조회하는 API 엔드포인트
+    @GetMapping("/emotion-tracks/{petId}")
+    public ResponseEntity<ResponseDTO> getEmotionTracks(@PathVariable Long petId) {
+        try {
+            List<EmotionTrackDTO> emotionTracks = myPageService.getEmotionTracksByPetId(petId);
+
+            if (emotionTracks.isEmpty()) {
+                return ResponseEntity.ok(new ResponseDTO<>(404, false, "해당 반려견 ID에 대한 감정 추적 기록이 없습니다.", null));
+            }
+
+            return ResponseEntity.ok(new ResponseDTO<>(200, true, "감정 추적 기록 조회 완료", emotionTracks));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(new ResponseDTO<>(500, false, "감정 추적 기록 조회 중 오류 발생: " + e.getMessage(), null));
+        }
+    }
 
 
 }
+
+
+
 

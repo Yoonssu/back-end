@@ -5,6 +5,7 @@ import com.aeon.hadog.base.dto.pet.PetDTO;
 import com.aeon.hadog.base.exception.DuplicateIdException;
 import com.aeon.hadog.base.exception.PetIdNotFoundException;
 import com.aeon.hadog.domain.Pet;
+import com.aeon.hadog.domain.User;
 import com.aeon.hadog.repository.PetRepository;
 import com.aeon.hadog.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -82,5 +83,4 @@ public class PetService {
         }
 
     }
-
 }

@@ -1,6 +1,8 @@
 package com.aeon.hadog.service;
 
 import com.aeon.hadog.base.code.ErrorCode;
+import com.aeon.hadog.base.dto.emotionTrack.EmotionDTO;
+import com.aeon.hadog.base.dto.emotionTrack.EmotionTrackDTO;
 import com.aeon.hadog.base.dto.mypage.MyPageDTO;
 import com.aeon.hadog.base.dto.adoptPost.AdoptPostDTO;
 import com.aeon.hadog.base.dto.adopt_review.AdoptReviewDTO;
@@ -9,16 +11,11 @@ import com.aeon.hadog.base.dto.pet.PetDTO;
 import com.aeon.hadog.base.exception.PetNotFoundException;
 import com.aeon.hadog.base.exception.UserNotFoundException;
 import com.aeon.hadog.domain.*;
-import com.aeon.hadog.repository.AdoptPostImagesRepository;
-import com.aeon.hadog.repository.AdoptPostRepository;
-import com.aeon.hadog.repository.PetRepository;
-import com.aeon.hadog.repository.UserRepository;
+import com.aeon.hadog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +27,8 @@ public class MyPageService {
     private final AdoptReviewService adoptReviewService;
     private final AdoptPostRepository adoptPostRepository;
     private final AdoptPostImagesRepository adoptPostImagesRepository;
+    private final EmotionTrackRepository emotionTrackRepository;
+    private final EmotionRepository emotionRepository;
 
     public MyPageDTO getUserInfo(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -128,6 +127,27 @@ public class MyPageService {
     }
 
 
+    public List<EmotionTrackDTO> getEmotionTracksByPetId(Long petId) {
+        List<EmotionTrack> emotionTracks = emotionTrackRepository.findByPetIdWithEmotion(petId);
+
+        return emotionTracks.stream().map(emotionTrack -> {
+            Emotion emotion = emotionTrack.getEmotion();
+            EmotionDTO emotionDTO = EmotionDTO.builder()
+                    .emotionId(emotion.getEmotionId())
+                    .emotion(emotion.getEmotion())
+                    .description(emotion.getDescription())
+                    .image(emotion.getImage())
+                    .build();
+
+            return EmotionTrackDTO.builder()
+                    .emotionTrackId(emotionTrack.getEmotionTrackId())
+                    .petId(emotionTrack.getPetId())
+                    .emotionDate(emotionTrack.getEmotionDate())
+                    .emotionId(emotion.getEmotionId())
+                    .emotion(emotionDTO)
+                    .build();
+        }).collect(Collectors.toList());
+    }
 
 
 }

@@ -25,6 +25,10 @@ public class EmotionTrack {
     @Column(nullable=false)
     private LocalDateTime emotionDate;
 
-    @Column(nullable=false)
-    private Long emotionId;
+    @Column(name = "emotion_id", nullable = false)
+    private Long emotionId; // 여전히 존재하지만, 관계 설정 시 충돌 방지
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emotion_id", insertable = false, updatable = false)
+    private Emotion emotion;
 }
