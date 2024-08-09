@@ -35,14 +35,15 @@ public class AdoptReviewController {
 
     @PostMapping
     public ResponseEntity<ResponseDTO> createReview(@AuthenticationPrincipal String user,
-                                                                    @RequestPart AdoptReviewDTO reviewDTO,
-                                                                    @RequestPart List<MultipartFile> images) {
+                                                    @RequestPart AdoptReviewDTO reviewDTO,
+                                                    @RequestPart List<MultipartFile> images) {
         try {
             User user1 = userRepository.findById(user).orElseThrow();
             AdoptReview review = AdoptReview.builder()
                     .user(user1)
                     .reviewDate(LocalDateTime.now())
                     .content(reviewDTO.getContent())
+                    .authorName(user1.getName()) // 작성자 이름 설정
                     .build();
 
             AdoptReview savedReview = adoptReviewService.saveReview(review, images);
@@ -51,6 +52,7 @@ public class AdoptReviewController {
                     .reviewId(savedReview.getReviewId())
                     .reviewDate(savedReview.getReviewDate())
                     .content(savedReview.getContent())
+                    .authorName(savedReview.getAuthorName()) // DTO에 작성자 이름 포함
                     .images(savedReview.getImages().stream().map(image ->
                             ReviewImageDTO.builder()
                                     .imageId(image.getImageId())
@@ -73,6 +75,7 @@ public class AdoptReviewController {
                             .reviewId(review.getReviewId())
                             .reviewDate(review.getReviewDate())
                             .content(review.getContent())
+                            .authorName(review.getAuthorName()) // DTO에 작성자 이름 포함
                             .images(review.getImages().stream().map(image ->
                                     ReviewImageDTO.builder()
                                             .imageId(image.getImageId())
@@ -93,6 +96,7 @@ public class AdoptReviewController {
                         .reviewId(review.getReviewId())
                         .reviewDate(review.getReviewDate())
                         .content(review.getContent())
+                        .authorName(review.getAuthorName()) // DTO에 작성자 이름 포함
                         .images(review.getImages().stream().map(image ->
                                 ReviewImageDTO.builder()
                                         .imageId(image.getImageId())
