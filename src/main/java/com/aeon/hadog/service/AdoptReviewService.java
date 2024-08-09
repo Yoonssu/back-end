@@ -39,11 +39,14 @@ public class AdoptReviewService {
                     .adoptReview(savedReview)
                     .fileName(imageUrl)
                     .build();
+
             reviewImageRepository.save(reviewImage);
+            review.getImages().add(reviewImage); // 이미지 리스트에 이미지 추가
         }
 
         return savedReview;
     }
+
 
     public Optional<AdoptReview> findById(Long id) {
         return adoptReviewRepository.findById(id);
@@ -79,5 +82,5 @@ public class AdoptReviewService {
     public List<AdoptReview> findReviewsByUserId(String userId) {
         return adoptReviewRepository.findByUser_IdOrderByReviewDateDesc(userId);
     }
-
 }
+

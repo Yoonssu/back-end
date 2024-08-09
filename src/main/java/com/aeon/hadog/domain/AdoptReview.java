@@ -32,8 +32,10 @@ public class AdoptReview {
     @OneToMany(mappedBy = "adoptReview", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ReviewImage> images;
 
-
     @Column(nullable=false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "author_name") // Ensure this matches the column name in your database
+    private String authorName;
 
 }
