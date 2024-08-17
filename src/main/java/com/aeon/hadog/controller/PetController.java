@@ -36,6 +36,7 @@ public class PetController {
 
             // 반려견 등록
             Long petId = petService.registerPet(userId, petDTO);
+            petDTO.setPetId(petId);
 
             return ResponseEntity.ok().body(new ResponseDTO<>(200, true, "반려견 등록 성공", petDTO));
 
