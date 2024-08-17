@@ -56,7 +56,8 @@ public class PetController {
             }
 
             // 반려견 정보 업데이트
-            petService.updatePet(petId, petDTO);
+            Long aLong = petService.updatePet(petId, petDTO);
+            petDTO.setPetId(aLong);
 
             return ResponseEntity.ok().body(new ResponseDTO<>(200, true, "반려견 정보 수정 성공", petDTO));
 
