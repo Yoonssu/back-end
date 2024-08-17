@@ -51,6 +51,7 @@ public class MyPageService {
 
     private PetDTO mapToPetDTO(Pet pet) {
         return PetDTO.builder()
+                .petId(pet.getPetId())
                 .name(pet.getName())
                 .breed(pet.getBreed())
                 .sex(pet.getSex())
@@ -91,7 +92,6 @@ public class MyPageService {
                 .build();
     }
 
-    // 사용자 ID를 기반으로 해당 사용자가 작성한 입양 공고 목록을 조회하는 메서드
     // 사용자 ID를 기반으로 해당 사용자가 작성한 입양 공고 목록을 조회하는 메서드
     public List<AdoptPostDTO> getMyAdoptPosts(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
