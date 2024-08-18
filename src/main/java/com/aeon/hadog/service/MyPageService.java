@@ -15,6 +15,7 @@ import com.aeon.hadog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -113,8 +114,10 @@ public class MyPageService {
 
         // 필요한 필드들을 DTO에 매핑하여 반환
         return AdoptPostDTO.builder()
+                .adoptPostId(adoptPost.getAdoptPostId())
+                .postDate(adoptPost.getPostDate())  // 엔티티의 postDate 값을 사용
                 .content(adoptPost.getContent())
-                .imageUrls(imageUrls) // 이미지 URL 목록 추가
+                .imageUrls(imageUrls)  // 이미지 URL 목록 추가
                 .name(adoptPost.getName())
                 .breed(adoptPost.getBreed())
                 .sex(adoptPost.getSex())
@@ -126,6 +129,7 @@ public class MyPageService {
                 .user(adoptPost.getUser())
                 .build();
     }
+
 
 
     public List<EmotionTrackDTO> getEmotionTracksByPetId(Long petId) {
