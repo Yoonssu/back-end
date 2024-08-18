@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -49,6 +50,10 @@ public class AdoptPost {
 
     @Column(nullable=false)
     private boolean adoptStatus;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private LocalDateTime postDate = LocalDateTime.now();
 
     @OneToMany(mappedBy = "adoptPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AdoptPostImages> images;

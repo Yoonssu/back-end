@@ -44,4 +44,10 @@ public class AdoptPostDTO {
     private boolean adoptStatus;
 
     private User user;
+
+    @NotNull(message = "공고 ID는 필수 입력 값입니다.")
+    private Long adoptPostId;
+
+    @NotNull(message = "작성 날짜는 필수 입력 값입니다.")
+    private LocalDateTime postDate;
 }
