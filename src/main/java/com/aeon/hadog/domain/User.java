@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Builder
@@ -35,5 +37,15 @@ public class User {
     public User update(String name){
         this.name = name;
         return this;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<AdoptReview> adoptReviews;
+
+    @PreRemove
+    private void removeReviews() {
+        for (AdoptReview review : adoptReviews) {
+            review.setUser(null);  // User와의 관계를 끊어준다.
+        }
     }
 }
