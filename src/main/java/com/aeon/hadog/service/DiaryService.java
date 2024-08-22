@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -118,6 +119,25 @@ public class DiaryService {
         diaryRepository.deleteByDiaryId(diary.getDiaryId());
 
         return true;
+    }
+
+    public List<DiaryDTO> getMonth(String userId, int year, int month) {
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        return diaryRepository.findAll().stream()
+                .filter(diary -> diary.getUserId() == user.getUserId())
+                .filter(diary -> diary.getDiaryDate().getYear() == year)
+                .filter(diary -> diary.getDiaryDate().getMonthValue() == month)
+                .map(this::convertToDiaryDTO)
+                .collect(Collectors.toList());
+    }
+
+    private DiaryDTO convertToDiaryDTO(Diary diary) {
+        return DiaryDTO.builder()
+                .emotionTrackId(diary.getEmotionTrack().getEmotionTrackId())
+                .diaryDate(diary.getDiaryDate())
+                .content(diary.getContent())
+                .build();
     }
 
     public Map<String, String> validateHandling(Errors errors) {

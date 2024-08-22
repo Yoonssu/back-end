@@ -61,4 +61,12 @@ public class DiaryController {
                 .ok()
                 .body(new ResponseDTO<>(200, true, "일기 삭제 완료", isDelete));
     }
+
+    @GetMapping("/month")
+    public ResponseEntity<ResponseDTO> getMonth(@AuthenticationPrincipal String userId, @RequestParam int year, @RequestParam int month){
+        List<DiaryDTO> result = diaryService.getMonth(userId, year, month);
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO<>(200, true, "일기 목록 불러오기 완료", result));
+    }
 }
