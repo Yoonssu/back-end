@@ -53,4 +53,12 @@ public class DiaryController {
                 .ok()
                 .body(new ResponseDTO<>(200, true, "일기 목록 불러오기 완료", result));
     }
+
+    @DeleteMapping
+    public ResponseEntity<ResponseDTO> deleteDiary(@AuthenticationPrincipal String userId, @RequestParam Long diaryId){
+        Boolean isDelete = diaryService.deleteDiary(userId, diaryId);
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO<>(200, true, "일기 삭제 완료", isDelete));
+    }
 }

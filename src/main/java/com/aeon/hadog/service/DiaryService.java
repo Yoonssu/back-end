@@ -107,6 +107,19 @@ public class DiaryService {
         return diaries;
     }
 
+    public boolean deleteDiary(String userId, Long diaryId){
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+        Diary diary = diaryRepository.findByDiaryId(diaryId).orElseThrow(()->new DiaryNotFoundException(ErrorCode.DIARY_NOT_FOUND));
+
+        if (!Objects.equals(user.getUserId(), diary.getUserId())) {
+            throw new EmotionTrackNotBelongToUserException(ErrorCode.EMOTION_TRACK_NOT_BELONG_TO_USER_ERROR);
+        }
+
+        diaryRepository.deleteByDiaryId(diary.getDiaryId());
+
+        return true;
+    }
+
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
 
