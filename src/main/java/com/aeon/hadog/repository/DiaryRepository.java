@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByDiaryId(Long Id);
 
+
+    void deleteByDiaryId(Long diaryId);
+
     @Query("SELECT new com.aeon.hadog.base.dto.diary.DiaryDTO(d.emotionTrack.emotionTrackId, d.diaryDate, d.content) FROM Diary d WHERE d.userId = :userId AND d.diaryDate = :date")
     List<DiaryDTO> findDiaryDTOByUserIdAndDiaryDate(@Param("userId") Long userId, @Param("date") LocalDateTime date);
 }
