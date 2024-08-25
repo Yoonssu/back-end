@@ -14,6 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class AdoptPostDTO {
+
+    private Long adoptPostId;
+
+    @NotNull(message = "작성 날짜는 필수 입력 값입니다.")
+    private LocalDateTime postDate;
+
     private List<String> imageUrls;
 
     @NotBlank(message = "내용은 필수 입력 값입니다.")
@@ -45,9 +51,4 @@ public class AdoptPostDTO {
 
     private User user;
 
-    @NotNull(message = "공고 ID는 필수 입력 값입니다.")
-    private Long adoptPostId;
-
-    @NotNull(message = "작성 날짜는 필수 입력 값입니다.")
-    private LocalDateTime postDate;
 }
