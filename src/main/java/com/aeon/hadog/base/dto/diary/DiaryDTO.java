@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,10 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class DiaryDTO {
+
+    private Long diaryId;
     @NotNull
     private Long emotionTrackId;
 
-    private LocalDateTime diaryDate;
+    private LocalDate diaryDate;
 
     @NotBlank(message = "내용은 필수 입력 값입니다.")
     private String content;

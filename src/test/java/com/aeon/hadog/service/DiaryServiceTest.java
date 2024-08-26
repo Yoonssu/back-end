@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -181,7 +182,7 @@ class DiaryServiceTest {
     void getDiarys() {
         // given
         String userId = "user3";
-        LocalDateTime date = LocalDateTime.of(2024, 5, 2, 0, 0);
+        LocalDate date = LocalDate.of(2024, 5, 2);
         List<DiaryDTO> diaries = diaryRepository.findDiaryDTOByUserIdAndDiaryDate(4L, date);
 
         // when
