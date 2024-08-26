@@ -135,6 +135,7 @@ public class DiaryService {
 
     private DiaryDTO convertToDiaryDTO(Diary diary) {
         return DiaryDTO.builder()
+                .diaryId(diary.getDiaryId())
                 .emotionTrackId(diary.getEmotionTrack().getEmotionTrackId())
                 .diaryDate(diary.getDiaryDate())
                 .content(diary.getContent())
