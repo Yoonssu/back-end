@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class DiaryService {
         return diaryDTO;
     }
 
-    public List<DiaryDTO> getDiarys(String userId, LocalDateTime date){
+    public List<DiaryDTO> getDiarys(String userId, LocalDate date){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
         List<DiaryDTO> diaries = diaryRepository.findDiaryDTOByUserIdAndDiaryDate(user.getUserId(), date);

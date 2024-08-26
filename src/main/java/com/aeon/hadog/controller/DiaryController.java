@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class DiaryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseDTO> getDiarys(@AuthenticationPrincipal String userId, @RequestParam LocalDateTime date){
+    public ResponseEntity<ResponseDTO> getDiarys(@AuthenticationPrincipal String userId, @RequestParam LocalDate date){
         List<DiaryDTO> result = diaryService.getDiarys(userId, date);
         return ResponseEntity
                 .ok()

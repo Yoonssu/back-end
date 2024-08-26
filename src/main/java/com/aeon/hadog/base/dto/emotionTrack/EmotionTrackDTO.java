@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import lombok.*;
 public class EmotionTrackDTO {
     private Long emotionTrackId;
     private Long petId;
-    private LocalDateTime emotionDate;
+    private LocalDate emotionDate;
     private Long emotionId;
     private EmotionDTO emotion;
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,7 +24,7 @@ public class EmotionTrack {
     private Long petId;
 
     @Column(nullable=false)
-    private LocalDateTime emotionDate;
+    private LocalDate emotionDate;
 
     @Column(name = "emotion_id", nullable = false)
     private Long emotionId; // 여전히 존재하지만, 관계 설정 시 충돌 방지
