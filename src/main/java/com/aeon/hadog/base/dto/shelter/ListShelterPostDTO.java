@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 public class ListShelterPostDTO {
+    private Long shelterPostId;
     private String title;
     private String thumbnail;
 

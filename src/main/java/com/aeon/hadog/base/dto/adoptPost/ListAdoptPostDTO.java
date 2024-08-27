@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 public class ListAdoptPostDTO {
+    private Long adoptPostId;
+
     private String thumbnail;
 
     private String name;
