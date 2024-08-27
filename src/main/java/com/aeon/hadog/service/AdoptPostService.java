@@ -97,6 +97,7 @@ public class AdoptPostService {
 
     private ListAdoptPostDTO convertToListDTO(AdoptPost adoptPost) {
         ListAdoptPostDTO dto = new ListAdoptPostDTO();
+        dto.setAdoptPostId(adoptPost.getAdoptPostId());
         dto.setName(adoptPost.getName());
         dto.setBreed(adoptPost.getBreed());
         dto.setAge(adoptPost.getAge());

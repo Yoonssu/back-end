@@ -103,6 +103,7 @@ public class ShelterPostService {
 
     private ListShelterPostDTO convertToListDTO(ShelterPost shelterPost) {
         ListShelterPostDTO dto = new ListShelterPostDTO();
+        dto.setShelterPostId(shelterPost.getShelterPostId());
         dto.setTitle(shelterPost.getTitle());
         dto.setSex(shelterPost.getSex());
         dto.setAge(shelterPost.getAge());
