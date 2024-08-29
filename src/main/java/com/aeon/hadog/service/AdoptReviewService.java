@@ -6,6 +6,7 @@ import com.aeon.hadog.domain.ReviewImage;
 import com.aeon.hadog.repository.AdoptReviewRepository;
 import com.aeon.hadog.repository.ReviewCommentRepository;
 import com.aeon.hadog.repository.ReviewImageRepository;
+import com.aeon.hadog.base.dto.adopt_review.ReviewCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +49,6 @@ public class AdoptReviewService {
         return savedReview;
     }
 
-
     public Optional<AdoptReview> findById(Long id) {
         return adoptReviewRepository.findById(id);
     }
@@ -56,8 +57,17 @@ public class AdoptReviewService {
         return adoptReviewRepository.findAll();
     }
 
-    public List<ReviewComment> findCommentsByReviewId(Long reviewId) {
-        return reviewCommentRepository.findByAdoptReviewReviewId(reviewId);
+    public List<ReviewCommentDTO> findCommentsByReviewId(Long reviewId) {
+        List<ReviewComment> comments = reviewCommentRepository.findByAdoptReviewReviewId(reviewId);
+        return comments.stream()
+                .map(comment -> ReviewCommentDTO.builder()
+                        .cmtId(comment.getCmtId())
+                        .content(comment.getContent())
+                        .userId(comment.getUser().getId())  // 사용자 ID를 포함
+                        .cmtDate(comment.getCmtDate())
+                        .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCmtId() : null)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -78,9 +88,7 @@ public class AdoptReviewService {
         return reviewCommentRepository.findByParentCommentCmtId(parentCommentId);
     }
 
-    // 사용자 ID를 기반으로 해당 사용자가 작성한 입양 후기 목록을 조회하는 메서드
     public List<AdoptReview> findReviewsByUserId(String userId) {
         return adoptReviewRepository.findByUser_IdOrderByReviewDateDesc(userId);
     }
 }
-
