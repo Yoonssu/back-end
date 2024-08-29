@@ -111,17 +111,17 @@ public class AdoptReviewController {
 
     @PostMapping("/{reviewId}/comments")
     public ResponseEntity<ResponseDTO> addComment(@PathVariable Long reviewId,
-                                                                    @RequestBody ReviewCommentDTO commentDTO,
-                                                                    @AuthenticationPrincipal String user) {
+                                                  @RequestBody ReviewCommentDTO commentDTO,
+                                                  @AuthenticationPrincipal String userId) {
         try {
-            User user1 = userRepository.findById(user).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
+            User user = userRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
             ReviewComment comment = ReviewComment.builder()
                     .adoptReview(AdoptReview.builder().reviewId(reviewId).build())
                     .content(commentDTO.getContent())
                     .cmtDate(LocalDateTime.now())
                     .parentComment(commentDTO.getParentCommentId() != null ? ReviewComment.builder().cmtId(commentDTO.getParentCommentId()).build() : null)
-                    .user(user1)
+                    .user(user)
                     .build();
 
             ReviewComment savedComment = adoptReviewService.saveComment(comment);
@@ -131,6 +131,7 @@ public class AdoptReviewController {
                     .content(savedComment.getContent())
                     .cmtDate(savedComment.getCmtDate())
                     .parentCommentId(savedComment.getParentComment() != null ? savedComment.getParentComment().getCmtId() : null)
+                    .userId(savedComment.getUser().getId()) // 사용자 ID 추가
                     .build();
 
             return ResponseEntity.ok(new ResponseDTO<>(200, true, "댓글 등록 성공", responseDTO));
@@ -138,7 +139,6 @@ public class AdoptReviewController {
             return ResponseEntity.ok(new ResponseDTO<>(400, false, "댓글 등록 실패: " + e.getMessage(), null));
         }
     }
-
 
     @GetMapping("/{reviewId}/comments")
     public ResponseEntity<ResponseDTO> getComments(@PathVariable Long reviewId) {
@@ -148,44 +148,40 @@ public class AdoptReviewController {
                         .content(comment.getContent())
                         .cmtDate(comment.getCmtDate())
                         .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCmtId() : null)
+                        .userId(comment.getUser().getId()) // 사용자 ID 추가
                         .build())
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new ResponseDTO<>(200, true, "댓글 목록 조회 성공", comments));
     }
 
-
-
     @PostMapping("/comments/{commentId}/replies")
     public ResponseEntity<ResponseDTO> addReply(@PathVariable Long commentId,
-                                                                  @RequestBody ReviewCommentDTO replyDTO,
-                                                                  @AuthenticationPrincipal String user) {
+                                                @RequestBody ReviewCommentDTO replyDTO,
+                                                @AuthenticationPrincipal String userId) {
         try {
-            // 부모 댓글을 찾음
             ReviewComment parentComment = reviewCommentRepository.findById(commentId)
                     .orElseThrow(() -> new Exception("부모 댓글을 찾을 수 없습니다."));
 
-            // 현재 사용자의 ID를 기반으로 사용자 정보를 가져옴
-            User user1 = userRepository.findById(user)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
-            // 대댓글을 생성하고 저장
             ReviewComment reply = ReviewComment.builder()
-                    .adoptReview(parentComment.getAdoptReview()) // 부모 댓글의 AdoptReview 사용
+                    .adoptReview(parentComment.getAdoptReview())
                     .content(replyDTO.getContent())
                     .cmtDate(LocalDateTime.now())
-                    .parentComment(parentComment) // 부모 댓글 설정
-                    .user(user1) // 대댓글 작성자 설정
+                    .parentComment(parentComment)
+                    .user(user)
                     .build();
 
             ReviewComment savedReply = adoptReviewService.saveComment(reply);
 
-            // 저장된 대댓글 정보를 DTO로 변환하여 반환
             ReviewCommentDTO responseDTO = ReviewCommentDTO.builder()
                     .cmtId(savedReply.getCmtId())
                     .content(savedReply.getContent())
                     .cmtDate(savedReply.getCmtDate())
                     .parentCommentId(savedReply.getParentComment() != null ? savedReply.getParentComment().getCmtId() : null)
+                    .userId(savedReply.getUser().getId()) // 사용자 ID 추가
                     .build();
 
             return ResponseEntity.ok(new ResponseDTO<>(200, true, "대댓글 등록 성공", responseDTO));
@@ -193,8 +189,6 @@ public class AdoptReviewController {
             return ResponseEntity.ok(new ResponseDTO<>(400, false, "대댓글 등록 실패: " + e.getMessage(), null));
         }
     }
-
-
 
     @GetMapping("/comments/{commentId}/replies")
     public ResponseEntity<ResponseDTO> getReplies(@PathVariable Long commentId) {
@@ -204,6 +198,7 @@ public class AdoptReviewController {
                         .content(reply.getContent())
                         .cmtDate(reply.getCmtDate())
                         .parentCommentId(reply.getParentComment() != null ? reply.getParentComment().getCmtId() : null)
+                        .userId(reply.getUser().getId()) // 사용자 ID 추가
                         .build())
                 .collect(Collectors.toList());
 
@@ -213,13 +208,11 @@ public class AdoptReviewController {
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResponseDTO> deleteComment(@PathVariable Long commentId) {
         try {
-            // 대댓글이 있는지 확인하고 모두 삭제
             List<ReviewComment> replies = reviewCommentRepository.findByParentCommentCmtId(commentId);
             for (ReviewComment reply : replies) {
                 adoptReviewService.deleteComment(reply.getCmtId());
             }
 
-            // 부모 댓글 삭제
             adoptReviewService.deleteComment(commentId);
 
             return ResponseEntity.ok(new ResponseDTO<>(200, true, "댓글 삭제 성공", null));
@@ -228,7 +221,6 @@ public class AdoptReviewController {
         }
     }
 
-    // 대댓글 삭제 메서드
     @DeleteMapping("/comments/replies/{replyId}")
     public ResponseEntity<ResponseDTO> deleteReply(@PathVariable Long replyId) {
         try {
@@ -238,6 +230,5 @@ public class AdoptReviewController {
             return ResponseEntity.ok(new ResponseDTO<>(400, false, "대댓글 삭제 실패: " + e.getMessage(), null));
         }
     }
-
 }
 

@@ -19,6 +19,8 @@ public class ReviewCommentDTO {
     @NotNull
     private String content; // 댓글 내용
 
+    private String userId;
+
     @NotNull
     private LocalDateTime cmtDate; // 댓글 작성일
 
