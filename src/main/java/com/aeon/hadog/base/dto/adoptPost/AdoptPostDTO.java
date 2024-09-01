@@ -17,7 +17,6 @@ public class AdoptPostDTO {
 
     private Long adoptPostId;
 
-    @NotNull(message = "작성 날짜는 필수 입력 값입니다.")
     private LocalDateTime postDate;
 
     private List<String> imageUrls;
