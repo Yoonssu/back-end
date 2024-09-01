@@ -126,7 +126,6 @@ public class MyPageService {
                 .duration(adoptPost.getDuration())
                 .neutering(adoptPost.isNeutering())
                 .adoptStatus(adoptPost.isAdoptStatus())
-                .user(adoptPost.getUser())
                 .build();
     }
 
